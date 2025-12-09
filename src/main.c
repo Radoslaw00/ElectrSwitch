@@ -1,8 +1,20 @@
 //Main event loop
-
 int main(void) {
+
+	//Normal event loop
 	while (1) {
-	
+
+		// Perform normal operations
+
+		delay(20);
 	}
-	return 0;
+	//Emergency event loop
+	while(1) {
+
+		// Perform emergency operations
+
+		delay(600000);
+	}
 }
+
+//FLOW
