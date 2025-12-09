@@ -9,7 +9,9 @@
 #define MAX_VOL 240
 #define MIN_VOL 180
 
-//flags
+static uint32_t seconds = 0;
+static uint32_t tick_20ms = 0;
+
 volatile bool emergency_flag = false;
 volatile bool over_temp = false;
 volatile bool over_voltage = false;
@@ -40,13 +42,22 @@ void compare_sensor_data(int16_t temperature, int16_t voltage) {
 	}
 }
 
+//Time
+void time(void)
+{
+	tick_20ms++;
+
+	if (tick_20ms >= 50) {   //50*20ms = 1s
+		tick_20ms = 0;
+		seconds++;
+	}
+}
+
 
 //RENAME FUNCTIONS (call all from logic.c) (ALL FOR main.c):
-/*
 void date(void) {}
 void read_sensors(void) {}
 void cmp_sensor_data(void) {}
 void emerg_override(void) {}
-void time(void) {}
+void time_update(void) { time(); }
 void read_sensors(void) {}
-*/

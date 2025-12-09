@@ -5,10 +5,12 @@ int main(void) {
 	//Normal event loop
 	while (1) {
 
-		//Perform normal operations
-
+		update_time();
 		delay(20);
 	}
+
+//=================================================================================//
+
 	//Emergency event loop
 	while(1) {
 
