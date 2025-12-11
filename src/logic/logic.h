@@ -1,4 +1,4 @@
-/*#ifndef LOGIC_H
+#ifndef LOGIC_H
 #define LOGIC_H
 
 #include <stdint.h>
@@ -16,4 +16,4 @@ void time(void);
 void electricity_flow(void);
 void delay_ms(uint32_t ms);
 
-#endif*/
+#endif

@@ -4,13 +4,13 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-//FAKE REGSISTERS
-volatile uint8_t REG_STATUS = 0x00;        //Status register
-volatile uint8_t REG_CONTROL = 0x00;       //Control register
-volatile uint16_t REG_DATA = 0x0000;       //Data register
-volatile uint32_t REG_CONFIG = 0x00000000; //Configuration register
+// ------------------------------[ FAKE REGISTERS ]------------------------------
+volatile uint8_t REG_STATUS = 0x05;        //Status register
+volatile uint8_t REG_CONTROL = 0x06;       //Control register
+volatile uint16_t REG_DATA = 0x0067;       //Data register
+volatile uint32_t REG_CONFIG = 0x00213769; //Configuration register
 
-//Simulated sensor values
+// ------------------------------ [SIMULATED REGISTERS ]------------------------------
 static int16_t simulated_temperature = 25; //Normal temperature
 static int16_t simulated_voltage = 200;    //Normal voltage
 
