@@ -25,8 +25,14 @@ bool volt_range(int16_t volt) {	return (volt >= MIN_VOL && volt <= MAX_VOL); }
 
 //READ SENSOR DATA
 void read_sensor_data(int16_t* temperature, int16_t* voltage) {
-	
+	read_simulated_registers(&temperature, &voltage);
 }
+
+//READ SENSOR DATA
+// ---------------------------- fake registers ----------------------------
+// REG_DATA = (uint16_t)voltage;
+// REG_STATUS = 0x01;
+// ------------------------------------------------------------------------
 
 //COMPARE SENSOR DATA
 void compare_sensor_data(int16_t temperature, int16_t voltage) {
