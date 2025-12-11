@@ -5,7 +5,7 @@
 #include "logic.h"
 
 #define MAX_TMP 120
-#define MIN_TMP -40
+#define MIN_TMP -20
 #define MAX_VOL 240
 #define MIN_VOL 180
 
@@ -55,9 +55,7 @@ void time(void)
 
 
 //RENAME FUNCTIONS (call all from logic.c) (ALL FOR main.c):
-void date(void) {}
 void read_sensors(void) {}
 void cmp_sensor_data(void) {}
 void emerg_override(void) {}
 void time_update(void) { time(); }
-void read_sensors(void) {}
