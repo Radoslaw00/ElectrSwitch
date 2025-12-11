@@ -1,0 +1,2 @@
+Enteriety of /debugger/ was written by AI to quickly test the software
+I do not recommend touching this code nor compiled exe

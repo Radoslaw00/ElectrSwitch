@@ -33,7 +33,7 @@
 int main(void) {									// Initialization
 
 	while (1) {										// Infinite loop
-		read_sensors();		// Read sensor data
+		read_sensors();		                        // Read sensor data
 		cmp_sensor_data();							// Compare sensor data
 		time_update();								// Update time
 		electricity_flow();							// Control electricity flow

@@ -1,0 +1,67 @@
+# DIFF: logic.c vs logic_fixed.c
+
+RECOMMENDATION: Steps to fix logic.c (To be applied by user)
+1. Fix Compilation Error:
+   - In `cmp_sensor_data()`, change `compare_sensor_data();` to `compare_sensor_data(temperature, voltage);`.
+2. Fix Hysteresis Logic:
+   - The current logic clears High Temp faults if the temp is > -15C (which is true for 118C).
+   - You must separate the "High Fault" state from the "Low Fault" state.
+   - Create `static bool temp_high_fault` and `static bool temp_low_fault`.
+   - Only clear `temp_high_fault` when `temperature < 115`.
+   - Only clear `temp_low_fault` when `temperature > -15`.
+   - Combine them: `over_temp = temp_high_fault || temp_low_fault`.
+   - Repeat for Voltage.
+
+The only difference is in the `cmp_sensor_data` wrapper function.
+
+**src/logic/logic.c (Original - BROKEN):**
+```c
+void cmp_sensor_data(void)		{ compare_sensor_data();	}
+```
+*Error: Calls `compare_sensor_data` with 0 arguments, but the definition requires 2 (`int16_t temperature, int16_t voltage`).*
+
+**debugger/logic_fixed.c (Patched - WORKING):**
+```c
+void cmp_sensor_data(void)		{ compare_sensor_data(temperature, voltage);	}
+```
+*Fix: Passes the static global `temperature` and `voltage` variables to the function.*
+
+---
+
+# AI CODER CONTEXT & SYSTEM OVERVIEW
+
+## 1. Project: ElectrSwitch
+A bare-metal embedded C project designed to control electricity flow based on temperature and voltage sensors.
+*   **Target:** No-OS (Bare Metal), 32kHz Clock, 8KB Flash, 1KB RAM.
+*   **Cycle:** Main loop runs every 20ms (50Hz).
+*   **Architecture:**
+    *   `main.c`: Infinite loop, calls logic functions in sequence.
+    *   `logic.c`: Core decision making. Reads sensors, checks thresholds, sets `emergency_flag`.
+    *   `registers.c`: Simulates hardware registers (`REG_CONTROL`, `REG_DATA`, etc.).
+
+## 2. Critical Logic Bugs (User Rejected Fixes)
+The user explicitly rejected fixes for these issues in the source code.
+*   **Compilation Error:** `logic.c` calls `compare_sensor_data()` without arguments. **MUST BE PATCHED TO RUN.**
+*   **Broken Hysteresis:** The logic uses a single `over_temp` / `over_voltage` flag for both high and low faults.
+    *   *Scenario:* High Temp Trip (125°C) -> Temp drops to 118°C.
+    *   *Bug:* 118°C > -15°C (Low Temp Clear Threshold), so the system **incorrectly clears the fault** while still hot.
+    *   *Result:* Unsafe operation. The debugger confirms this behavior.
+
+## 3. Debugger: MCU_metal_runtime.c
+A C-based test harness designed to run on a PC (Windows/Linux) to simulate the MCU environment.
+*   **Mechanism:**
+    *   Includes `logic.h` and `registers.h`.
+    *   **Crucial:** It compiles against `logic_fixed.c` (the patched version) instead of `src/logic/logic.c` to bypass the compilation error.
+    *   It does **not** use the `main.c` loop. Instead, it defines its own `run_mcu_cycle()` which calls the logic functions in the same order: `read_sensors()`, `cmp_sensor_data()`, `time_update()`, `electricity_flow()`.
+*   **Simulation:**
+    *   Uses `set_simulated_registers(t, v)` to inject test inputs.
+    *   Reads `REG_CONTROL` and `emergency_flag` to verify outputs.
+    *   Prints a colored report of the system state to stdout.
+*   **Usage:**
+    *   Must be compiled with the patched logic file.
+    *   Command: `gcc debugger/MCU_metal_runtime.c debugger/logic_fixed.c src/registers/registers.c -I src/logic -I src/registers -o debugger/mcu_runtime.exe`
+
+## 4. Constraints & Rules
+*   **NO TOUCHING SOURCE:** Do not modify `src/` files or `README.md`.
+*   **Workaround:** If you need to run code, use the `debugger/` directory.
+*   **State:** The system is currently in a "Broken but Simulated" state. We know it's buggy, but we are only allowed to observe it via the debugger.
