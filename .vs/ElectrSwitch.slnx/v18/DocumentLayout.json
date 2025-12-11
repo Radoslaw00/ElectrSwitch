@@ -47,8 +47,7 @@
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAABLAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
               "WhenOpened": "2025-12-08T11:49:08.331Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
             },
             {
               "$type": "Document",
@@ -60,8 +59,7 @@
               "RelativeToolTip": "src\\logic\\logic.c",
               "ViewState": "AgIAAGYAAAAAAAAAAAAAAHAAAAAsAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
-              "WhenOpened": "2025-12-08T11:49:05.234Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-08T11:49:05.234Z"
             },
             {
               "$type": "Document",
@@ -73,8 +71,7 @@
               "RelativeToolTip": "src\\registers\\registers.c",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAArAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
-              "WhenOpened": "2025-12-08T11:49:07.798Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-08T11:49:07.798Z"
             },
             {
               "$type": "Document",
@@ -86,8 +83,7 @@
               "RelativeToolTip": "src\\logic\\logic.h",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAACAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-12-08T11:49:07.516Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-08T11:49:07.516Z"
             },
             {
               "$type": "Document",
@@ -99,8 +95,7 @@
               "RelativeToolTip": "src\\registers\\registers.h",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAmAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-12-08T11:49:08.048Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-08T11:49:08.048Z"
             },
             {
               "$type": "Document",
@@ -110,7 +105,7 @@
               "RelativeDocumentMoniker": "README.md",
               "ToolTip": "C:\\Users\\radoslaw\\Desktop\\ElectrSwitch\\README.md",
               "RelativeToolTip": "README.md",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAF0AAAA+AAAAAAAAAA==",
+              "ViewState": "AgIAAC4AAAAAAAAAAAAwwEUAAAAoAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
               "WhenOpened": "2025-12-08T11:49:18.89Z",
               "EditorCaption": ""
