@@ -107,7 +107,7 @@ void time(void)
 
 //RENAME FUNCTIONS
 void read_sensors(void)			{ read_sensor_data();		}
-void cmp_sensor_data(void)		{ compare_sensor_data();	}
+//void cmp_sensor_data(void)	{ compare_sensor_data();	}
 void electricity_flow(void)		{ elec();					}
 void time_update(void)			{ time();					}
 void delay_ms(uint32_t count)	{ del();					}
