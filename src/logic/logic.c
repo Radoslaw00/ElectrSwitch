@@ -23,6 +23,11 @@ bool volt_range(int16_t volt) {
 	return (volt >= MIN_VOL && volt <= MAX_VOL);
 }
 
+//Read sensor data
+void read_sensor_data(int16_t* temperature, int16_t* voltage) {
+	//placeholder
+}
+
 //Compare sensor data
 void compare_sensor_data(int16_t temperature, int16_t voltage) {
 	if (!temp_range(temperature)) {
