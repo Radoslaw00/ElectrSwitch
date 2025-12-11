@@ -1,8 +1,11 @@
-#include "registers.h"
+// ------------------------------[ registers.c ]------------------------------
+// This file contains simulated hardware registers for the Electricity Flow Control System.
+// ------------------------------[ INCLUDES ]------------------------------
+#include <stdint.h>				//library for standard integer types
+#include <stdbool.h>			//library for boolean type
+#include <stddef.h>				//library for standard definitions
 
-#include <stdint.h>
-#include <stdbool.h>
-#include <stddef.h>
+#include "registers.h"			// Include simulated hardware registers header file
 
 // ------------------------------[ FAKE REGISTERS ]------------------------------
 volatile uint8_t REG_STATUS = 0x05;        //Status register
@@ -23,3 +26,4 @@ void set_simulated_registers(int16_t temperature, int16_t voltage) {
 	simulated_temperature = temperature;
 	simulated_voltage = voltage;
 }
+// ------------------------------[ END OF FILE ]------------------------------

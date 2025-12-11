@@ -39,7 +39,7 @@ The **ElectrSwitch** software acts as a decision-making core, continuously monit
 * **Sensor Polling:** High-speed polling of dedicated analog-to-digital converter (ADC) channels for **Voltage** and **Temperature** sensors.
 * **Threshold Checking:** Compares the measured values against predefined safe operating thresholds (e.g., maximum temperature, over/under-voltage limits).
 * **Flow Control:** Based on threshold checks, it directly manipulates General-Purpose Input/Output (GPIO) pins connected to relays or solid-state switches (the "switches manager").
-* **Fail-Safe:** Implements immediate cut-off logic (e.g., in assembly language or highly optimized C) in case of critical over-limit conditions.
+* **Fail-Safe:** Implements immediate cut-off logic in case of critical over-limit conditions.
 
 This is the conceptual design for the system:
 
