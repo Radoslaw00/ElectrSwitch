@@ -9,6 +9,7 @@
 #define MIN_TMP -20
 #define MAX_VOL 240
 #define MIN_VOL 180
+#define MAX_DEL 1001
 
 static uint32_t seconds = 0;
 static uint32_t tick_20ms = 0;
@@ -53,10 +54,22 @@ void compare_sensor_data(int16_t temperature, int16_t voltage) {
 	}
 }
 
-//EMERGENCY OVERRIDE
-void emergency(void) {
+void elec_cutoff(void) {
+}
+void elec_flow(void) {
+}
+
+void elec(void) {
 	compare_sensor_data(temperature, voltage);
-	if (emergency_flag)
+	if (over_temp || over_voltage) {
+		// Simulate cutting off electricity flow
+		//REG_CONTROL |= 0x01; // Set bit 0 to indicate cutoff
+		elec_cutoff();
+	} else {
+		// Simulate normal electricity flow
+		//REG_CONTROL &= ~0x01; // Clear bit 0 to indicate normal flow
+		elec_flow();
+	}
 }
 
 //TIME UPDATE
@@ -73,5 +86,5 @@ void time(void)
 //RENAME FUNCTIONS
 void read_sensors(void)		{ read_sensor_data();		}
 void cmp_sensor_data(void)	{ compare_sensor_data();	}
-void emerg_override(void)	{ emergency();				}
+void electricity_flow(void)	{ elec();					}
 void time_update(void)		{ time();					}
