@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 
+#include "registers.h"
 #include "logic.h"
 
 #define MAX_TMP 120
@@ -12,23 +13,22 @@
 static uint32_t seconds = 0;
 static uint32_t tick_20ms = 0;
 
+static int16_t temperature = 0;
+static int16_t voltage = 0;
+
 volatile bool emergency_flag = false;
 volatile bool over_temp = false;
 volatile bool over_voltage = false;
 
-bool temp_range(int16_t temp) {
-	return (temp >= MIN_TMP && temp <= MAX_TMP);
-}
-bool volt_range(int16_t volt) {
-	return (volt >= MIN_VOL && volt <= MAX_VOL);
-}
+bool temp_range(int16_t temp) { return (temp >= MIN_TMP && temp <= MAX_TMP); }
+bool volt_range(int16_t volt) {	return (volt >= MIN_VOL && volt <= MAX_VOL); }
 
-//Read sensor data
+//READ SENSOR DATA
 void read_sensor_data(int16_t* temperature, int16_t* voltage) {
-	//placeholder
+	
 }
 
-//Compare sensor data
+//COMPARE SENSOR DATA
 void compare_sensor_data(int16_t temperature, int16_t voltage) {
 	if (!temp_range(temperature)) {
 		over_temp = true;
@@ -47,7 +47,13 @@ void compare_sensor_data(int16_t temperature, int16_t voltage) {
 	}
 }
 
-//Time
+//EMERGENCY OVERRIDE
+void emergency(void) {
+	compare_sensor_data(temperature, voltage);
+	if (emergency_flag)
+}
+
+//TIME UPDATE
 void time(void)
 {
 	tick_20ms++;
@@ -58,9 +64,8 @@ void time(void)
 	}
 }
 
-
-//RENAME FUNCTIONS (call all from logic.c) (ALL FOR main.c):
-void read_sensors(void) {}
-void cmp_sensor_data(void) {}
-void emerg_override(void) {}
-void time_update(void) { time(); }
+//RENAME FUNCTIONS
+void read_sensors(void)		{ read_sensor_data();		}
+void cmp_sensor_data(void)	{ compare_sensor_data();	}
+void emerg_override(void)	{ emergency();				}
+void time_update(void)		{ time();					}
