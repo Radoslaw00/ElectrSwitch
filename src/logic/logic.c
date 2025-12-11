@@ -55,18 +55,19 @@ void compare_sensor_data(int16_t temperature, int16_t voltage) {
 }
 
 void elec_cutoff(void) {
+	//REG_CONTROL |= 0x02;  // simulate cutting electricity
 }
 void elec_flow(void) {
+	//REG_CONTROL &= ~0x02; // simulate normal electricity flow
 }
 
 void elec(void) {
-	compare_sensor_data(temperature, voltage);
 	if (over_temp || over_voltage) {
-		// Simulate cutting off electricity flow
+		//Simulate cutting off electricity flow
 		//REG_CONTROL |= 0x01; // Set bit 0 to indicate cutoff
 		elec_cutoff();
 	} else {
-		// Simulate normal electricity flow
+		//Simulate normal electricity flow
 		//REG_CONTROL &= ~0x01; // Clear bit 0 to indicate normal flow
 		elec_flow();
 	}

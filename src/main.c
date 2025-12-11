@@ -2,11 +2,10 @@
 int main(void) {
 
 	while (1) {
-		read_sensors()
+		read_sensors(&voltage, &temperature);
 		cmp_sensor_data();
 		time_update();
-		if (emergency_flag) { electricity_flow(); }
-		else (!emergency_flag) { electricity_flow(); }
+		electricity_flow();
 		delay(20);
 	}
 }

@@ -1,8 +1,3 @@
 ﻿# ElectrSwitch
-A tiny and extremely fast state switches manager for an embedded system.
-
-LIBRARIES:
-stdint.h
-stdbool.h
-stddef.h
-^ ts for me
+<b>A tiny and extremely fast electricity state switches manager for an embedded system.</b>
+<br><br>a
