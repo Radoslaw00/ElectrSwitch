@@ -5,8 +5,8 @@
 #include <stdbool.h>
 
 void read_sensors(void);
-int16_t temperature(void);
-int16_t voltage(void);
+int16_t temp_range(int16_t temperature);
+int16_t volt_range(int16_t voltage);
 
 void cmp_sensor_data(int16_t temperature, int16_t voltage);
 extern volatile bool emergency_flag;

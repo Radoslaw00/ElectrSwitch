@@ -35,7 +35,7 @@ void read_sensor_data(int16_t* temperature, int16_t* voltage) {
 // REG_STATUS = 0x01;
 // ------------------------------------------------------------------------
 
-//COMPARE SENSOR DATA
+/*COMPARE SENSOR DATA
 void compare_sensor_data(int16_t temperature, int16_t voltage) {
 	if (!temp_range(temperature)) {
 		over_temp = true;
@@ -52,7 +52,7 @@ void compare_sensor_data(int16_t temperature, int16_t voltage) {
 	} else {
 		emergency_flag = false;
 	}
-}
+}															*/
 
 void elec_cutoff(void) {
 	//REG_CONTROL |= 0x02;  // simulate cutting electricity
@@ -106,8 +106,8 @@ void time(void)
 }																		
 
 //RENAME FUNCTIONS
-void read_sensors(void)		{ read_sensor_data();		}
-void cmp_sensor_data(void)	{ compare_sensor_data();	}
-void electricity_flow(void)	{ elec();					}
-void time_update(void)		{ time();					}
+void read_sensors(void)			{ read_sensor_data();		}
+void cmp_sensor_data(void)		{ compare_sensor_data();	}
+void electricity_flow(void)		{ elec();					}
+void time_update(void)			{ time();					}
 void delay_ms(uint32_t count)	{ del();					}

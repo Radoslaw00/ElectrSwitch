@@ -26,7 +26,7 @@ int main(void) {
 		time_update();								// Update time
 		electricity_flow();							// Control electricity flow
 
-		delay_20ms();								// 20 milisecond delay on 32kHz
+		delay_ms();									// 20 milisecond delay on 32kHz
 	}
 }
 // ------------------------------[ END OF FILE ]------------------------------
