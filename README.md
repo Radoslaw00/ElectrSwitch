@@ -1,5 +1,4 @@
-﻿# ElectrSwitch
-# ⚡ ElectrSwitch: Electricity Flow Control System
+﻿# ⚡ ElectrSwitch: Electricity Flow Control System
 
 **A tiny and extremely fast electricity state switches manager for a bare-metal embedded system.**
 
@@ -19,12 +18,12 @@ This software is a **purely theoretical** implementation designed to manage and 
 
 ## 🎯 Target System & Constraints
 
-This project is designed to run on a **bare-metal** microcontroller environment without an Operating System (OS) or Real-Time Operating System (RTOS), requiring highly efficient code.
+This project is designed to run on a **bare-metal** microcontroller environment without an Operating System (OS) or Real-Time Operating System (RTOS), requiring highly efficient code. 
 
 | Parameter | Specification | Note |
 | :--- | :--- | :--- |
 | **Architecture** | Bare Metal | No OS dependency. |
-| **Clock Speed** | 32.000 Hz (32 kHz) | Extremely low frequency, demanding high optimization. |
+| **Clock Speed** | 32.000 Hz (32 kHz) | Extremely low frequency, demanding highly optimized C and assembly (`nop`) timing. |
 | **Flash Memory** | 8 KB | Strict limitation for program size. |
 | **RAM** | 1 KB | Minimal memory available for variables and stack. |
 
@@ -34,21 +33,29 @@ This project is designed to run on a **bare-metal** microcontroller environment 
 
 The **ElectrSwitch** software acts as a decision-making core, continuously monitoring analog sensor inputs to determine the safe and necessary state of the electrical flow.
 
-### Core Functionality
+### Core Functionality & Reliability
 
-* **Sensor Polling:** High-speed polling of dedicated analog-to-digital converter (ADC) channels for **Voltage** and **Temperature** sensors.
-* **Threshold Checking:** Compares the measured values against predefined safe operating thresholds (e.g., maximum temperature, over/under-voltage limits).
-* **Flow Control:** Based on threshold checks, it directly manipulates General-Purpose Input/Output (GPIO) pins connected to relays or solid-state switches (the "switches manager").
-* **Fail-Safe:** Implements immediate cut-off logic in case of critical over-limit conditions.
+The system is built around a highly reliable, deterministic main loop: 
 
-This is the conceptual design for the system:
+* **Fixed Polling Cycle:** The entire control loop executes exactly every **$20\text{ms}$** (a $50\text{Hz}$ rate). This timing is achieved using a **$640$-cycle NOP loop** rather than a hardware timer, minimizing complexity.
+* **Hysteresis Logic:** The threshold checking (`cmp_sensor_data`) implements **Hysteresis** for both temperature and voltage. This prevents contact "chattering" or rapid state toggling when sensor readings fluctuate near critical limits. 
+* **Fail-Safe Control:** The `electricity_flow` function relies entirely on the central **`emergency_flag`** to make a rapid decision (Cutoff or Flow), directly manipulating the `REG_CONTROL` register.
 
+### Execution Flow (Main Loop)
+
+The main loop (`main.c`) defines the strict $20\text{ms}$ execution sequence:
+
+1.  **Read Inputs:** `read_sensors()` fetches current V/T data.
+2.  **Process Logic:** `cmp_sensor_data()` checks thresholds and sets the `emergency_flag`.
+3.  **Update Time:** `time_update()` increments the software $20\text{ms}$ tick counter.
+4.  **Control Outputs:** `electricity_flow()` switches the simulated relay based on the `emergency_flag`.
+5.  **Enforce Timing:** `delay_ms()` executes the mandatory $640$-cycle pause.
 
 ### Potential Applications (Theoretical)
 
-* **Uninterruptible Power Supplies (UPS):** Managing switchover between mains and battery power based on mains voltage stability.
-* **Solar Inverters:** Controlling the connection of solar panels/batteries to the grid/load.
-* **Power Supplies:** Implementing over-voltage/over-temperature protection circuits.
+* **Uninterruptible Power Supplies (UPS):** Managing switchover based on mains voltage stability using hysteresis.
+* **Solar Inverters:** Controlling the connection of power sources based on temperature and voltage limits.
+* **Power Supplies:** Implementing robust over-voltage/over-temperature protection circuits.
 
 ---
 
