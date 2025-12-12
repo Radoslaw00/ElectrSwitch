@@ -1,2 +1,0 @@
-Test and read the code in MCU_metal_runtime.c
-Create multiple files with multiple purposes of testing the software

@@ -24,6 +24,7 @@ static uint32_t tick_20ms = 0;
 static int16_t temperature = 0;
 static int16_t voltage = 0;
 
+// Internal fault state to handle hysteresis correctly
 static bool temp_high_fault = false;
 static bool temp_low_fault = false;
 static bool volt_high_fault = false;
@@ -140,9 +141,9 @@ void time(void) {               // Software clock
 	}
 }																		
 // -----------------------------[ RENAME FUNCTIONS ]-----------------------------
-void read_sensors(void)			{ read_sensor_data();		                    }
+void read_sensors(void)			{ read_sensor_data();		}
 void cmp_sensor_data(void)		{ compare_sensor_data(temperature, voltage);	}
-void electricity_flow(void)		{ elec_ctrl_flow_output();                      }
-void time_update(void)			{ time();					                    }
-void delay_ms(uint32_t count)	{ del();					                    }
-// --------------------------------[ END OF FILE ]-------------------------------
+void electricity_flow(void)		{ elec_ctrl_flow_output();  }
+void time_update(void)			{ time();					}
+void delay_ms(uint32_t count)	{ del();					}
+// ------------------------------[ END OF FILE ]------------------------------
