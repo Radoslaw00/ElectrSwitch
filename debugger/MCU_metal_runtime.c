@@ -27,8 +27,6 @@
 
 // ------------------------------[ HELPER FUNCTIONS ]------------------------------
 
-// ------------------------------[ HELPER FUNCTIONS ]------------------------------
-
 // Simulate one full cycle of the main loop (excluding infinite loop and delay)
 void run_mcu_cycle(void) {
     read_sensors();
