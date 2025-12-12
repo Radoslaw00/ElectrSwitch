@@ -1,0 +1,91 @@
+# HOW TO PLUG ElectrSwitch (/src) INTO THE DEBUGGER
+
+The goal is to make `MCU_metal_runtime.c` act as the physical hardware board that "runs" your original firmware.
+
+## 1. THE CONCEPT: "Host-Based Simulation"
+
+Your firmware (`src/logic/*.c`) is "Bare Metal" code. It usually runs blindly on a chip.
+To "plug it in" to Windows, we treat `MCU_metal_runtime.c` as the **Motherboard**.
+*   **The Processor**: Your PC CPU (throttled by `Sleep()`).
+*   **The Bus/Wires**: Function calls to `registers.c`.
+*   **The Sensors**: Variables in memory that we change with the keyboard.
+
+## 2. THE "PLUG" (Integration Strategy)
+
+Currently, the Debugger manually calls the functions that `main.c` calls (`read_sensors`, `cmp_sensor_data`, etc.).
+**To make this PERFECT (1:1 with hardware), we should modify `main.c` slightly.**
+
+### Recommended Tiny Change (Refactoring `main.c`)
+We should move the code *inside* the infinite loop into a single function called `void run_system_tick(void)`.
+
+**In `src/main.c` (Proposed Change):**
+```c
+// New wrapper function (The "Heartbeat")
+void run_system_tick(void) {
+    read_sensors();
+    cmp_sensor_data(temperature, voltage); // The fixed call
+    time_update();
+    electricity_flow();
+    delay_ms(1); // or appropriate handling
+}
+
+int main(void) {
+    // Setup...
+    while (1) {
+        run_system_tick();
+    }
+}
+```
+
+**In `debugger/MCU_metal_runtime.c` (The Simulator):**
+Instead of manually calling the logic functions, the Debugger simply calls:
+```c
+extern void run_system_tick(void); // Plug into the firmware
+
+while(simulation_running) {
+    check_keyboard_input();
+    
+    // EXECUTE FIRMWARE CYCLE
+    run_system_tick(); 
+    
+    print_dashboard();
+    Sleep(20); // Sync to 50Hz
+}
+```
+
+### Why this is better?
+If you ever change the *order* of operations in `src/main.c`, the Debugger automatically stays in sync. You are literally running the *exact same loop code* as the hardware.
+
+## 3. HOW IT CONNECTS (Inputs/Outputs)
+
+The "Plug" is `src/registers/registers.c`. This file acts as the shared memory between the "Simulation" and the "Firmware".
+
+1.  **INPUTS (Sensors)**:
+    *   **Debugger**: Calls `set_simulated_registers(25, 220)`. This writes to static variables in `registers.c` (Simulating voltage on the ADC pin).
+    *   **Firmware**: Calls `read_simulated_registers()`. It reads those variables, thinking it's reading a physical sensor.
+
+2.  **OUTPUTS (Relays/LEDs)**:
+    *   **Firmware**: Writes to `REG_CONTROL` (e.g., `REG_CONTROL |= 0x02`).
+    *   **Debugger**: Reads `REG_CONTROL` and prints "POWER CUTOFF" if the bit is set.
+
+## 4. WHAT NEEDS TO BE COMPILED
+
+To run this, you compile the **Simulator** + **The Firmware Logic** + **The Registers**. You DO NOT compile `src/main.c` (because it has the infinite loop), but you stick to the logic files.
+
+**The Command:**
+```powershell
+gcc debugger/MCU_metal_runtime.c src/logic/logic.c src/registers/registers.c -I src/logic -I src/registers -o debugger/mcu_runtime.exe
+```
+
+*   `debugger/MCU_metal_runtime.c`: The Windows GUI/Test Harness.
+*   `src/logic/logic.c`: Your actual Source Code (The Brain).
+*   `src/registers/registers.c`: The Fake Hardware (The Wires).
+
+## 5. SUMMARY OF STEPS TO ACHIEVE "PERFECT PLUG"
+
+1.  **Modify `src/main.c`**: Extract the loop body into `run_system_tick()`.
+2.  **Expose `run_system_tick`**: Add its prototype to a header (or `logic.h`).
+3.  **Update Debugger**: Make `MCU_metal_runtime.c` call `run_system_tick()` instead of individual functions.
+4.  **Compile & Run**.
+
+This makes `MCU_metal_runtime` a true "Hardware Emulator" for your specific firmware.
