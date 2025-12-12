@@ -24,6 +24,11 @@ static uint32_t tick_20ms = 0;
 static int16_t temperature = 0;
 static int16_t voltage = 0;
 
+static bool temp_high_fault = false;
+static bool temp_low_fault = false;
+static bool volt_high_fault = false;
+static bool volt_low_fault = false;
+
 volatile bool emergency_flag = false;
 volatile bool over_temp = false;
 volatile bool over_voltage = false;
@@ -46,41 +51,37 @@ void read_sensor_data(void) {
 void compare_sensor_data(int16_t temperature, int16_t voltage) {
 // ---------------------------[ TEMPERATURE HYSTERESIS ]-----------------------
     if (temperature > MAX_TMP) {
-        // High limit: Immediate fault trip of >120C
-        over_temp = true;
+        temp_high_fault = true;     // Trip High
     }
-    else if (over_temp == true && temperature < TEMP_CLEAR_HIGH) {
-        // High limit fault clear: Must drop below clear limit of 115C
-        over_temp = false;
+    else if (temperature < TEMP_CLEAR_HIGH) {
+        temp_high_fault = false;    // Clear High
     }
 
-    else if (temperature < MIN_TMP) {
-        // Low limit: Immediate fault trip of <-20C
-        over_temp = true;
+    if (temperature < MIN_TMP) {
+        temp_low_fault = true;      // Trip Low
     }
-    else if (over_temp == true && temperature > TEMP_CLEAR_LOW) {
-        // Low limit fault clear: Must rise above clear limit of >-15C
-        over_temp = false;
+    else if (temperature > TEMP_CLEAR_LOW) {
+        temp_low_fault = false;     // Clear Low
     }
+
+    over_temp = temp_high_fault || temp_low_fault;
 
 // ----------------------------[ VOLTAGE HYSTERESIS ]----------------------------
     if (voltage > MAX_VOL) {
-        // Over-voltage trip of >240V
-        over_voltage = true;
+        volt_high_fault = true;     // Trip High
     }
-    else if (over_voltage == true && voltage < VOL_CLEAR_HIGH) {
-        // Over-voltage fault clear of <235V
-        over_voltage = false;
+    else if (voltage < VOL_CLEAR_HIGH) {
+        volt_high_fault = false;    // Clear High
     }
 
-    else if (voltage < MIN_VOL) {
-        // Under-voltage trip of <180V
-        over_voltage = true;
+    if (voltage < MIN_VOL) {
+        volt_low_fault = true;      // Trip Low
     }
-    else if (over_voltage == true && voltage > VOL_CLEAR_LOW) {
-        // Under-voltage fault clear of >185V
-        over_voltage = false;
+    else if (voltage > VOL_CLEAR_LOW) {
+        volt_low_fault = false;     // Clear Low
     }
+
+    over_voltage = volt_high_fault || volt_low_fault;
 // -------------------------[ EMERGENCY FLAG UPDATE ]-------------------------
     if (over_temp || over_voltage) {
         emergency_flag = true;
