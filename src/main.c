@@ -10,7 +10,7 @@
 // ------------------------------[ TARGET MCU ]------------------------------
 // This code is intended to run on bare metal microcontrollers without an RTOS or any OS.
 // Clock speed: 32.000Hz (32kHz)
-// Memory: 8KB Flash, 1KB RAM
+// Memory: 32KB Flash, 2KB RAM
 // --------------------------------[ PROJECT ]--------------------------------
 // Electricity Flow Control System.
 // Controls electricity flow based on temperature and voltage sensor data.
