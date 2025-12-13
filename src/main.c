@@ -41,53 +41,7 @@ int main(void) {									// Initialization
 		delay_ms();									// 20 milisecond delay on 32kHz
 	}                                               // Go back to the beginning of the loop
 	return 0;                                       // Never reaches here
-
     //Note why return: return 0 is unreachable in this no-os infinite-loop design, but kept
     //for completeness/compiler satisfaction if compiled in a non-embedded environment.
 }                                                   // End of 'main' function
 // ------------------------------[ END OF FILE ]------------------------------
-// ------------------------------[ CONTROL FLOW ]------------------------------
-/*
-MAIN {
-- read_sensors
-- read_sensor_data
-- read_simulated_registers
-- cmp_sensor_data
-- compare_sensor_data
-- IF temperature > MAX_TMP
-- over_temp = true
-- ELIF over_temp IS true AND temperature < TEMP_CLEAR_HIGH
-    - over_temp = false
-    - ELIF temperature < MIN_TMP
-    - over_temp = true
-    - ELIF over_temp IS true AND temperature > TEMP_CLEAR_LOW
-    - over_temp = false
-    - IF voltage > MAX_VOL
-    - over_voltage = true
-    - ELIF over_voltage IS true AND voltage < VOL_CLEAR_HIGH
-    - over_voltage = false
-    - ELIF voltage < MIN_VOL
-    - over_voltage = true
-    - ELIF over_voltage IS true AND voltage > VOL_CLEAR_LOW
-    - over_voltage = false
-    - IF over_temp OR over_voltage
-    - emergency_flag = true
-    - ELSE
-    - emergency_flag = false
-    - time_update
-    - time
-    - tick_20ms++
-    - IF tick_20ms >= 50
-    - tick_20ms = 0
-    - seconds++
-    - electricity_flow
-    - elec_ctrl_flow_output
-    - IF emergency_flag
-    - elec_cutoff
-    - Manipulate REG_CONTROL(Cut Power)
-    - ELSE
-    - elec_flow
-    - Manipulate REG_CONTROL(Maintain Power)
-    - delay_ms
-    - del
-    - Execute 640 - cycle NOP loop }                                    */

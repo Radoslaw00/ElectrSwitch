@@ -7,7 +7,7 @@
 
 #include "registers.h"      // Include simulated hardware registers header file
 #include "logic.h"          // Include logic header file
-
+// ------------------------------[ CONSTANTS ]------------------------------
 #define MAX_TMP 120         // Temperature maximum limits in Celsius
 #define MIN_TMP -20         // Temperature minimum limits in Celsius
 #define MAX_VOL 240         // Voltage maximum limit in Volts
@@ -18,36 +18,30 @@
 #define TEMP_CLEAR_HIGH 115 // Must drop below 115C to clear over-temp fault (was 120)
 #define TEMP_CLEAR_LOW  -15 // Must rise above -15C to clear under-temp fault (was -20)
 
-static uint32_t seconds = 0;
-static uint32_t tick_20ms = 0;
+static uint32_t seconds = 0;            // Software seconds counter
+static uint32_t tick_20ms = 0;          // 20ms tick counter for timekeeping
 
-static int16_t temperature = 0;
-static int16_t voltage = 0;
+static int16_t temperature = 0;         // Sensor data storage
+static int16_t voltage = 0;             // Sensor data storage
 
-// Internal fault state to handle hysteresis correctly
-static bool temp_high_fault = false;
-static bool temp_low_fault = false;
-static bool volt_high_fault = false;
-static bool volt_low_fault = false;
+static bool temp_high_fault = false;    // High temperature fault state
+static bool temp_low_fault = false;     // Low temperature fault state
+static bool volt_high_fault = false;	// High voltage fault state
+static bool volt_low_fault = false;     // Low voltage fault state
 
-volatile bool emergency_flag = false;
-volatile bool over_temp = false;
-volatile bool over_voltage = false;
-
+volatile bool emergency_flag = false;   // Emergency flag for electricity flow control
+volatile bool over_temp = false;        // Over-temperature flag
+volatile bool over_voltage = false;     // Over-voltage flag
+// ------------------------------[ RANGE CHECK FUNCTIONS ]------------------------------
 bool temp_range(int16_t temp) { return (temp >= MIN_TMP && temp <= MAX_TMP); }
 bool volt_range(int16_t volt) {	return (volt >= MIN_VOL && volt <= MAX_VOL); }
-
-// ===============================================================================
-
 // -----------------------------[ READ SENSOR DATA ]-----------------------------
 void read_sensor_data(void) {
 	read_simulated_registers(&temperature, &voltage);
 }
 // ------------------------------[ FAKE REGISTERS ]----------------------------- 
-//  REG_DATA = (uint16_t)voltage;   
-//  REG_STATUS = 0x01;          
-
-
+//  REG_DATA = (uint16_t)voltage;       // Simulated voltage register
+//  REG_STATUS = 0x01;                  // Simulated status register
 // ------------------------------[ COMPARE SENSOR DATA ]------------------------------
 void compare_sensor_data(int16_t temperature, int16_t voltage) {
 // ---------------------------[ TEMPERATURE HYSTERESIS ]-----------------------
@@ -64,9 +58,8 @@ void compare_sensor_data(int16_t temperature, int16_t voltage) {
     else if (temperature > TEMP_CLEAR_LOW) {
         temp_low_fault = false;     // Clear Low
     }
-
+// ---------------------------[ OVER TEMPERATURE FLAG ]--------------------------
     over_temp = temp_high_fault || temp_low_fault;
-
 // ----------------------------[ VOLTAGE HYSTERESIS ]----------------------------
     if (voltage > MAX_VOL) {
         volt_high_fault = true;     // Trip High
@@ -81,14 +74,14 @@ void compare_sensor_data(int16_t temperature, int16_t voltage) {
     else if (voltage > VOL_CLEAR_LOW) {
         volt_low_fault = false;     // Clear Low
     }
-
+// ---------------------------[ OVER VOLTAGE FLAG ]---------------------------
     over_voltage = volt_high_fault || volt_low_fault;
 // -------------------------[ EMERGENCY FLAG UPDATE ]-------------------------
     if (over_temp || over_voltage) {
-        emergency_flag = true;
+		emergency_flag = true;      // Set emergency flag
     }
     else {
-        emergency_flag = false;
+		emergency_flag = false;     // Clear emergency flag
     }
 }
 // --------------------------[ ELECTRICITY FLOW CONTROL ]--------------------------
@@ -115,7 +108,6 @@ void del(void) {								//Clock speed 32kHz
 			__asm__ __volatile__("nop");        // No operation (1 cycle)
 		}
 }
-
 // ------------------------------[ DELAY CALCULATION ]------------------------------
 /*              <--- PORTING DELAY FUNCTION TO OTHER CLOCK SPEEDS --->
 
@@ -141,9 +133,9 @@ void time(void) {               // Software clock
 	}
 }																		
 // -----------------------------[ RENAME FUNCTIONS ]-----------------------------
-void read_sensors(void)			{ read_sensor_data();		}
+void read_sensors(void)			{ read_sensor_data();		                    }
 void cmp_sensor_data(void)		{ compare_sensor_data(temperature, voltage);	}
-void electricity_flow(void)		{ elec_ctrl_flow_output();  }
-void time_update(void)			{ time();					}
-void delay_ms(uint32_t count)	{ del();					}
-// ------------------------------[ END OF FILE ]------------------------------
+void electricity_flow(void)		{ elec_ctrl_flow_output();                      }
+void time_update(void)			{ time();					                    }
+void delay_ms(uint32_t count)	{ del();					                    }
+// --------------------------------[ END OF FILE ]-------------------------------
