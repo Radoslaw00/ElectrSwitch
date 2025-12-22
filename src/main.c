@@ -23,7 +23,7 @@
 // This code is licensed under the MIT License.
 // ----------------------------------[ AUTHOR ]----------------------------------
 // Author: Radoslaw00
-// Link: https://github.com/Radoslaw00
+// Link to GitHub: https://github.com/Radoslaw00
 // Link to ElectrSwitch project: https://github.com/Radoslaw00/ElectrSwitch
 // Discord: ideqe
 // ---------------------------------[ INCLUDES ]---------------------------------
