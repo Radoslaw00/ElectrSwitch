@@ -25,7 +25,6 @@
 // Author: Radoslaw00
 // Link to GitHub: https://github.com/Radoslaw00
 // Link to ElectrSwitch project: https://github.com/Radoslaw00/ElectrSwitch
-// Discord: ideqe
 // ---------------------------------[ INCLUDES ]---------------------------------
 #include "logic/logic.h"			// Include core logic header file
 #include "registers/registers.h"	// Include simulated hardware registers header file
